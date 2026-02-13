@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2 Session 16: Final Review</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#D84315;min-height:100vh;padding:20px}
+.container{max-width:800px;margin:0 auto}
+.header{background:#fff;border-radius:20px;padding:30px;margin-bottom:20px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.header h1{color:#D84315;font-size:1.4em}
+.header p{color:#888}
+.badge{background:#ef4444;color:#fff;padding:4px 12px;border-radius:20px;font-size:.8em}
+.level-badge{background:#D84315;color:#fff;padding:6px 16px;border-radius:20px;font-size:.9em;display:inline-block;margin-bottom:10px}
+.card{background:#fff;border-radius:16px;padding:25px;margin-bottom:20px}
+.card h2{color:#D84315;margin-bottom:15px}
+label{font-weight:600;color:#333;display:block;margin-bottom:8px}
+input[type="text"],select{width:100%;padding:14px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;margin-bottom:15px}
+input:focus,select:focus{outline:none;border-color:#D84315}
+.btn{background:#D84315;color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;transition:all .2s}
+.btn:hover{background:#BF360C}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-orange{background:#F5A623}
+.btn-secondary{background:#f5f5f5;color:#333}
+.section{display:none}
+.section.active{display:block}
+.reading-box{background:#f8f9fa;border-radius:12px;padding:20px;margin-bottom:20px;border-left:4px solid #D84315;line-height:1.8}
+.question{background:#f8f9fa;border-radius:12px;padding:20px;margin:15px 0;border:1px solid #eee}
+.question h4{margin-bottom:15px;color:#333}
+.option{padding:14px;border:2px solid #e0e0e0;border-radius:10px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.option:hover{border-color:#D84315;background:#fbe9e7}
+.option.selected{border-color:#D84315;background:#ffccbc}
+.option.correct{border-color:#22c55e;background:#f0fdf4}
+.option.incorrect{border-color:#ef4444;background:#fef2f2}
+.circle{width:20px;height:20px;border:2px solid #ccc;border-radius:50%;flex-shrink:0}
+.option.selected .circle{border-color:#D84315;background:#D84315}
+textarea{width:100%;min-height:120px;padding:14px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;font-family:inherit;resize:vertical}
+textarea:focus{outline:none;border-color:#D84315}
+.progress{height:8px;background:#e0e0e0;border-radius:4px;margin-bottom:20px}
+.progress-bar{height:100%;background:#F5A623;border-radius:4px;transition:width .3s}
+.progress-text{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;color:#666}
+.score-card{background:linear-gradient(135deg,#D84315,#E64A19);border-radius:20px;padding:35px;color:#fff;text-align:center}
+.score-big{font-size:4em;font-weight:700}
+.scores{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:20px}
+.scores>div{background:rgba(255,255,255,.15);border-radius:12px;padding:12px}
+.scores label{font-size:.75em;opacity:.9}
+.scores span{font-size:1.4em;font-weight:700;display:block}
+.cefr-box{background:linear-gradient(135deg,#6A1B9A,#8E24AA);color:#fff;border-radius:12px;padding:20px;margin-top:20px;text-align:center}
+.cefr-box h3{margin-bottom:10px}
+.cefr-level{font-size:2em;font-weight:700}
+.not-submitted{background:#ffebee;border:2px solid #ef5350;border-radius:12px;padding:20px;text-align:center;animation:pulse-warning 2s infinite}
+.not-submitted h3{color:#c62828;margin-bottom:10px}
+@keyframes pulse-warning{0%,100%{box-shadow:0 0 0 0 rgba(239,83,80,.4)}50%{box-shadow:0 0 0 10px rgba(239,83,80,0)}}
+.submitted-success{background:#e8f5e9;border:2px solid #66bb6a;border-radius:12px;padding:20px;text-align:center;display:none}
+.submitted-success h3{color:#2e7d32}
+.prompt-box{background:#fbe9e7;border:1px solid #ffab91;border-radius:12px;padding:20px;margin-bottom:20px}
+.prompt-box h4{color:#D84315;margin-bottom:10px}
+.word-count{text-align:right;color:#888;font-size:14px;margin-top:8px}
+.feedback{background:#fbe9e7;border:1px solid #D84315;border-radius:12px;padding:20px;margin-top:15px}
+.hidden{display:none}
+.nav-buttons{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+@media(max-width:600px){.scores{grid-template-columns:repeat(3,1fr)}.nav-buttons{flex-direction:column}}
+
+/* Role Play Styles */
+.scenario-option{padding:15px;border:2px solid #e0e0e0;border-radius:12px;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.scenario-option:hover{border-color:#D84315;background:#fbe9e7}
+.scenario-option.selected{border-color:#D84315;background:#ffccbc}
+.chat-container{background:#f5f5f5;border-radius:16px;padding:20px;margin:20px 0;min-height:200px;max-height:400px;overflow-y:auto}
+.chat-bubble{max-width:85%;padding:12px 16px;border-radius:16px;margin-bottom:12px;line-height:1.5}
+.chat-ai{background:#D84315;color:#fff;border-bottom-left-radius:4px}
+.chat-user{background:#fff;border:2px solid #D84315;color:#333;border-bottom-right-radius:4px}
+.chat-row{display:flex;margin-bottom:12px}
+.chat-row.ai{justify-content:flex-start}
+.chat-row.user{justify-content:flex-end}
+.chat-label{font-size:11px;color:#666;margin-bottom:4px;font-weight:600}
+.mic-btn{width:80px;height:80px;border-radius:50%;background:#D84315;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:15px auto;transition:all .2s}
+.mic-btn:hover{background:#BF360C;transform:scale(1.05)}
+.mic-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.mic-btn.recording{background:#ef4444;animation:pulse-rec 1.5s infinite}
+.mic-btn svg{width:36px;height:36px;fill:#fff}
+@keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 15px rgba(239,68,68,0)}}
+.status-text{text-align:center;color:#666;margin:10px 0;font-size:14px}
+.exchange-counter{text-align:center;color:#D84315;font-weight:600;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="level-badge">CEFR Level B2 - Upper Intermediate</div>
+        <h1>💼 Session 16: Final Review <span class="badge">FINAL</span></h1>
+        <p>Week 8 • Job Skills 1 Complete Review</p>
+    </div>
+
+    <!-- Start Section -->
+    <div class="section active" id="start">
+        <div class="card">
+            <h2>Welcome to Your Final Review!</h2>
+            <p style="color:#666;margin-bottom:20px">This review covers everything you learned in Job Skills 1:</p>
+            <ul style="color:#666;margin-bottom:20px;padding-left:20px">
+                <li>Workplace Etiquette & Professional Greetings</li>
+                <li>Small Talk & Negotiation Skills</li>
+                <li>Tenses: Present, Past, Future, Present Perfect</li>
+                <li>Modal Verbs, Indirect Questions, Conditionals</li>
+                <li>Resume Writing & Job Interview Skills</li>
+            </ul>
+            <label>Your Full Name</label>
+            <input type="text" id="studentName" placeholder="Enter your name...">
+            <label>Your Class</label>
+            <select id="studentClass">
+                <option value="">Select your class...</option>
+                <option value="3073-MW-8PM">3073 - Mon/Wed 8:00 PM (Angela)</option>
+                <option value="3076-MW-945PM">3076 - Mon/Wed 9:45 PM (Angela)</option>
+                <option value="3079-TTH-11AM">3079 - Tue/Thu 11:00 AM (Tom)</option>
+                <option value="3083-TTH-8PM">3083 - Tue/Thu 8:00 PM (Angela)</option>
+                <option value="3084-TTH-945PM">3084 - Tue/Thu 9:45 PM (Angela)</option>
+            </select>
+            <button class="btn" onclick="startQuiz()">Start Final Review →</button>
+        </div>
+    </div>
+
+    <!-- Section 1: Reading -->
+    <div class="section" id="s1">
+        <div class="card">
+            <div class="progress-text"><span>Section 1 of 5</span><span>20%</span></div>
+            <div class="progress"><div class="progress-bar" style="width:20%"></div></div>
+            <h2>📖 1. Reading Comprehension</h2>
+            <div class="reading-box">
+                <p><strong>A Challenging Job Interview</strong></p>
+                <p>Maria had been searching for a new job for three months when she finally got an interview at a marketing company. She was nervous but well-prepared.</p>
+                <p>"Could you tell me about your previous experience?" the interviewer asked. Maria explained that she had worked as a marketing assistant for two years and had helped develop several successful campaigns.</p>
+                <p>"If you were offered this position, what would you bring to the team?" Maria took a deep breath. "I would bring creativity and dedication. I'm also very organized, which is essential in marketing."</p>
+                <p>The interviewer nodded. "We have to make a decision by Friday. We'll let you know soon."</p>
+                <p>Maria left feeling confident. She had prepared well, and she knew she had given her best. Two days later, she received the call – she got the job!</p>
+            </div>
+            <div id="readingQuestions"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goBack0()">← Back</button>
+                <button class="btn" onclick="checkS1()">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Vocabulary -->
+    <div class="section" id="s2">
+        <div class="card">
+            <div class="progress-text"><span>Section 2 of 5</span><span>40%</span></div>
+            <div class="progress"><div class="progress-bar" style="width:40%"></div></div>
+            <h2>📝 2. Vocabulary Review</h2>
+            <div id="vocabQuestions"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goTo('s1')">← Back</button>
+                <button class="btn" onclick="checkS2()">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Writing -->
+    <div class="section" id="s3">
+        <div class="card">
+            <div class="progress-text"><span>Section 3 of 5</span><span>60%</span></div>
+            <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
+            <h2>✍️ 3. Writing</h2>
+            <div class="prompt-box">
+                <h4>Writing Task</h4>
+                <p>Write a short paragraph about <strong>a scheduling conflict at work</strong> (6-8 sentences).</p>
+                <p style="margin-top:10px;color:#666">Include:</p>
+                <ul style="padding-left:20px;color:#666">
+                    <li>What the conflict is</li>
+                    <li>How you would handle it (use Second Conditional)</li>
+                    <li>What you will do to resolve it</li>
+                </ul>
+            </div>
+            <textarea id="writing" placeholder="Write here..." oninput="updateWC()"></textarea>
+            <div class="word-count">Words: <span id="wc">0</span></div>
+            <div class="feedback hidden" id="wFeedback"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goTo('s2')">← Back</button>
+                <button class="btn" id="wBtn" onclick="checkWriting()">Get Feedback →</button>
+                <button class="btn hidden" id="wNext" onclick="goTo('s4')">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Speaking Role Play -->
+    <div class="section" id="s4">
+        <div class="card">
+            <div class="progress-text"><span>Section 4 of 5</span><span>80%</span></div>
+            <div class="progress"><div class="progress-bar" style="width:80%"></div></div>
+            <h2>🎤 4. Speaking - Role Play</h2>
+            
+            <!-- Scenario Selection -->
+            <div id="scenarioSelection">
+                <div class="prompt-box">
+                    <h4>Choose a role-play scenario:</h4>
+                    <p style="color:#666">You will have a professional conversation. Listen and respond!</p>
+                </div>
+                <div class="scenario-option" onclick="selectScenario(1)">
+                    <strong>💪 Scenario 1: Health and Fitness</strong>
+                    <p style="color:#666;font-size:14px;margin-top:5px">Discuss your health journey and fitness goals with a colleague.</p>
+                </div>
+                <div class="scenario-option" onclick="selectScenario(2)">
+                    <strong>😅 Scenario 2: Mistake or Misunderstanding</strong>
+                    <p style="color:#666;font-size:14px;margin-top:5px">Explain a misunderstanding at work and how you resolved it.</p>
+                </div>
+                <div class="scenario-option" onclick="selectScenario(3)">
+                    <strong>💼 Scenario 3: Job Interview</strong>
+                    <p style="color:#666;font-size:14px;margin-top:5px">Practice a job interview for your dream job.</p>
+                </div>
+            </div>
+
+            <!-- Role Play Chat -->
+            <div id="rolePlayArea" style="display:none">
+                <div style="background:#ffccbc;padding:10px 15px;border-radius:8px;margin-bottom:15px;text-align:center">
+                    <strong id="scenarioTitle" style="color:#D84315"></strong>
+                </div>
+                <div class="exchange-counter" id="exchangeCounter">Exchange 1 of 4</div>
+                <div class="chat-container" id="chatContainer"></div>
+                <div class="status-text" id="statusText">Click the microphone to respond</div>
+                <button class="mic-btn" id="micBtn" onclick="toggleMic()" disabled>
+                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                </button>
+            </div>
+
+            <div class="feedback hidden" id="sFeedback"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goTo('s3')">← Back</button>
+                <button class="btn" id="sBtn" onclick="finishSpeaking()" style="display:none">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Grammar -->
+    <div class="section" id="s5">
+        <div class="card">
+            <div class="progress-text"><span>Section 5 of 5</span><span>100%</span></div>
+            <div class="progress"><div class="progress-bar" style="width:100%"></div></div>
+            <h2>📚 5. Grammar Quiz</h2>
+            <div id="grammarQuestions"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goTo('s4')">← Back</button>
+                <button class="btn btn-orange" onclick="submitFinal()">Submit Final Review ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="section" id="results">
+        <div class="score-card">
+            <p style="opacity:.8">🎉 Congratulations! Job Skills 1 Complete! 🎉</p>
+            <div class="score-big" id="finalPct">0%</div>
+            <p id="studentDisplay"></p>
+            <div class="scores">
+                <div><label>Reading</label><span id="scL">0/3</span></div>
+                <div><label>Vocab</label><span id="scV">0/6</span></div>
+                <div><label>Writing</label><span id="scW">0/20</span></div>
+                <div><label>Speaking</label><span id="scS">0/20</span></div>
+                <div><label>Grammar</label><span id="scG">0/8</span></div>
+            </div>
+            <div class="cefr-box">
+                <h3>Your CEFR Progress</h3>
+                <div class="cefr-level" id="cefrLevel">B2</div>
+                <p id="cefrMessage">You have completed the B2 Upper Intermediate level!</p>
+            </div>
+            <div style="margin-top:25px">
+                <div class="not-submitted" id="notSubmittedWarning">
+                    <h3>⚠️ NOT YET SUBMITTED</h3>
+                    <p>Click the button below to submit your results to your teacher</p>
+                </div>
+                <div class="submitted-success" id="submittedSuccess">
+                    <h3>✓ Submitted Successfully!</h3>
+                    <p>Your teacher will receive your results</p>
+                </div>
+                <button class="btn btn-orange" id="submitBtn" onclick="submitToTeacher()" style="margin-top:15px;font-size:20px;padding:20px">📤 Submit to Teacher</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const SESSION='B2 Session 16 (FINAL)';
+let studentName='',studentClass='',scores={l:0,v:0,w:0,s:0,g:0},writingText='';
+let readingAnswers=[],grammarAnswers=[];
+
+// Role Play Variables
+let selectedScenario=0;
+let currentExchange=0;
+let transcript=[];
+let isRecording=false;
+let recognition=null;
+
+// Pre-scripted conversations for B2 level
+const scenarios={
+    1:{
+        title:'💪 Health and Fitness',
+        aiRole:'Colleague',
+        userRole:'You',
+        exchanges:[
+            {ai:"Hey! I noticed you've been looking really healthy lately. Have you made any lifestyle changes?"},
+            {ai:"That's impressive! How long have you been doing that? What kind of exercise do you do?"},
+            {ai:"That sounds great! Have you changed your eating habits too? Do you do meal prep?"},
+            {ai:"I should try that! If I started exercising, I would probably feel better. Thanks for the inspiration!"}
+        ]
+    },
+    2:{
+        title:'😅 Mistake or Misunderstanding',
+        aiRole:'Supervisor',
+        userRole:'Employee',
+        exchanges:[
+            {ai:"I wanted to talk to you about what happened with the project deadline. Could you tell me what went wrong?"},
+            {ai:"I see. How did you handle the situation when you realized the mistake?"},
+            {ai:"What would you do differently if this situation happened again?"},
+            {ai:"Thank you for being honest about this. I appreciate you taking responsibility. Let's make sure it doesn't happen again."}
+        ]
+    },
+    3:{
+        title:'💼 Job Interview',
+        aiRole:'Interviewer',
+        userRole:'Candidate',
+        exchanges:[
+            {ai:"Thank you for coming today. Could you tell me a little about yourself and your professional background?"},
+            {ai:"Interesting! What would you say is your greatest strength, and how has it helped you in your career?"},
+            {ai:"If you were offered this position, what would you bring to our team?"},
+            {ai:"Great answers! Do you have any questions for me about the position or the company?"}
+        ]
+    }
+};
+
+// Reading Questions - B2 Level
+const readingQBank=[
+    {q:"How long had Maria been searching for a job?",opts:["One month","Two months","Three months"],correct:2},
+    {q:"What type of question did the interviewer use?",opts:["Direct question","Indirect question","Yes/No question"],correct:1},
+    {q:"What conditional did Maria use to answer?",opts:["First conditional","Second conditional","Zero conditional"],correct:1},
+    {q:"What qualities did Maria say she would bring?",opts:["Speed and efficiency","Creativity and dedication","Leadership and teamwork"],correct:1},
+    {q:"When would the company make a decision?",opts:["By Thursday","By Friday","By Monday"],correct:1}
+];
+
+// Grammar Questions - B2 Level (includes conditionals from health unit)
+const grammarQBank=[
+    {q:"If I _____ more time, I would study for the exam.",opts:["have","had","will have"],correct:1},
+    {q:"Could you tell me where _____ ?",opts:["is the bank","the bank is","the bank was"],correct:1},
+    {q:"She has worked here _____ five years.",opts:["since","for","during"],correct:1},
+    {q:"You're coming to the meeting, _____ ?",opts:["aren't you","isn't it","don't you"],correct:0},
+    {q:"I _____ on this project all morning. I'm exhausted!",opts:["work","have been working","worked"],correct:1},
+    {q:"You _____ wear a suit to the interview. It's required.",opts:["should","must","could"],correct:1},
+    {q:"If you eat healthy food, you _____ better. (general truth)",opts:["feel","will feel","would feel"],correct:0},
+    {q:"If you _____ enough sleep, your immune system works better.",opts:["get","will get","got"],correct:0},
+    {q:"If you study hard, you _____ the exam. (likely situation)",opts:["pass","will pass","would pass"],correct:1},
+    {q:"I was wondering if you _____ help me with this report.",opts:["can","could","will"],correct:1},
+    {q:"By the time I arrived, the meeting _____ already started.",opts:["has","had","was"],correct:1},
+    {q:"She _____ at the company since 2019.",opts:["works","has worked","is working"],correct:1}
+];
+
+// Vocabulary Questions - B2 Level (Job Skills + Health)
+const vocabQBank=[
+    {q:"The skills and knowledge needed for a job are called _____.",opts:["portfolio","qualifications","networking"],correct:1},
+    {q:"A letter sent with your resume explaining why you fit the role is a _____.",opts:["reference","cover letter","certification"],correct:1},
+    {q:"To refuse an offer or request politely is to _____ it.",opts:["turn down","check out","apply for"],correct:0},
+    {q:"A time limit for completing a task is called a _____.",opts:["deadline","initiative","portfolio"],correct:0},
+    {q:"Making professional connections to find opportunities is _____.",opts:["mentoring","networking","interviewing"],correct:1},
+    {q:"Healthcare to prevent illness before it happens is called _____.",opts:["treatment","diagnosis","preventive care"],correct:2},
+    {q:"A yearly medical exam by a doctor is an _____.",opts:["annual physical","blood work","screening"],correct:0},
+    {q:"Taking action independently without being asked shows _____.",opts:["deadline","initiative","qualification"],correct:1},
+    {q:"A long-lasting health problem is called a _____ condition.",opts:["acute","chronic","preventive"],correct:1},
+    {q:"Medicine you can buy without a prescription is _____.",opts:["dosage","over-the-counter","side effects"],correct:1}
+];
+
+function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+}
+
+function initQuestions(){
+    // Reading
+    const rQs=shuffle([...readingQBank]).slice(0,3);
+    let rHTML='';
+    rQs.forEach((q,i)=>{
+        const opts=q.opts.map((o,idx)=>({text:o,isCorrect:idx===q.correct}));
+        shuffle(opts);
+        readingAnswers[i]=opts.findIndex(o=>o.isCorrect);
+        rHTML+='<div class="question"><h4>'+(i+1)+'. '+q.q+'</h4>';
+        opts.forEach((o,j)=>{
+            rHTML+='<div class="option" onclick="sel(this)" data-v="'+j+'"><div class="circle"></div>'+o.text+'</div>';
+        });
+        rHTML+='</div>';
+    });
+    document.getElementById('readingQuestions').innerHTML=rHTML;
+
+    // Vocabulary
+    const vQs=shuffle([...vocabQBank]).slice(0,6);
+    let vHTML='';
+    vQs.forEach((q,i)=>{
+        const opts=q.opts.map((o,idx)=>({text:o,isCorrect:idx===q.correct}));
+        shuffle(opts);
+        const correctIdx=opts.findIndex(o=>o.isCorrect);
+        vHTML+='<div class="question" data-correct="'+correctIdx+'"><h4>'+(i+1)+'. '+q.q+'</h4>';
+        opts.forEach((o,j)=>{
+            vHTML+='<div class="option" onclick="sel(this)" data-v="'+j+'"><div class="circle"></div>'+o.text+'</div>';
+        });
+        vHTML+='</div>';
+    });
+    document.getElementById('vocabQuestions').innerHTML=vHTML;
+
+    // Grammar
+    const gQs=shuffle([...grammarQBank]).slice(0,8);
+    let gHTML='';
+    gQs.forEach((q,i)=>{
+        const opts=q.opts.map((o,idx)=>({text:o,isCorrect:idx===q.correct}));
+        shuffle(opts);
+        grammarAnswers[i]=opts.findIndex(o=>o.isCorrect);
+        gHTML+='<div class="question" data-c="'+grammarAnswers[i]+'"><h4>'+(i+1)+'. '+q.q+'</h4>';
+        opts.forEach((o,j)=>{
+            gHTML+='<div class="option" onclick="sel(this)" data-v="'+j+'"><div class="circle"></div>'+o.text+'</div>';
+        });
+        gHTML+='</div>';
+    });
+    document.getElementById('grammarQuestions').innerHTML=gHTML;
+}
+
+function startQuiz(){
+    studentName=document.getElementById('studentName').value.trim();
+    studentClass=document.getElementById('studentClass').value;
+    if(!studentName){alert('Please enter your name');return;}
+    if(!studentClass){alert('Please select your class');return;}
+    initQuestions();
+    goTo('s1');
+}
+
+function goTo(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+}
+
+function goBack0(){
+    document.getElementById('s1').classList.remove('active');
+    document.getElementById('start').classList.add('active');
+}
+
+function sel(el){
+    el.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+function checkS1(){
+    let correct=0;
+    document.querySelectorAll('#readingQuestions .question').forEach((q,i)=>{
+        const selected=q.querySelector('.option.selected');
+        if(selected&&parseInt(selected.dataset.v)===readingAnswers[i])correct++;
+    });
+    scores.l=correct;
+    goTo('s2');
+}
+
+function checkS2(){
+    let correct=0;
+    document.querySelectorAll('#vocabQuestions .question').forEach(q=>{
+        const selected=q.querySelector('.option.selected');
+        const correctAns=parseInt(q.dataset.correct);
+        if(selected&&parseInt(selected.dataset.v)===correctAns)correct++;
+    });
+    scores.v=correct;
+    goTo('s3');
+}
+
+function updateWC(){
+    document.getElementById('wc').textContent=document.getElementById('writing').value.trim().split(/\s+/).filter(w=>w).length;
+}
+
+function checkWriting(){
+    writingText=document.getElementById('writing').value;
+    const t=writingText.toLowerCase();
+    const wc=t.trim().split(/\s+/).filter(w=>w).length;
+    
+    if(wc<15){
+        alert('Please write at least 15 words');
+        return;
+    }
+    
+    let errorCount=0;
+    // B2 level errors
+    if(/if i have.*would|if i will/i.test(t)) errorCount++;
+    if(/i am work|i am go|he have work/i.test(t)) errorCount++;
+    
+    // Check for required content
+    const hasConditional=/if.*would|would.*if/i.test(t);
+    const hasFuture=/will|going to|i'll/i.test(t);
+    const hasWorkVocab=/meeting|deadline|schedule|project|supervisor|colleague|conflict/i.test(t);
+    const hasModal=/would|could|should|must|have to/i.test(t);
+    
+    // Calculate score
+    let score=0;
+    score+=(hasConditional?6:0);
+    score+=(hasFuture?4:0);
+    score+=(hasWorkVocab?4:0);
+    score+=(hasModal?3:0);
+    score+=(wc>=50?3:wc>=30?2:1);
+    score-=(errorCount*3);
+    score=Math.max(0,Math.min(20,Math.round(score)));
+    
+    scores.w=score;
+    
+    let feedbackHTML='<h4>Feedback</h4>';
+    feedbackHTML+='<p>Word count: '+wc+'</p>';
+    if(errorCount>0){
+        feedbackHTML+='<p style="color:#ef4444"><strong>Grammar errors found: '+errorCount+'</strong></p>';
+    }
+    feedbackHTML+='<p><strong>Score: '+scores.w+'/20</strong></p>';
+    
+    document.getElementById('wFeedback').innerHTML=feedbackHTML;
+    document.getElementById('wFeedback').classList.remove('hidden');
+    document.getElementById('wBtn').classList.add('hidden');
+    document.getElementById('wNext').classList.remove('hidden');
+}
+
+// ============ ROLE PLAY FUNCTIONS ============
+
+function selectScenario(num){
+    selectedScenario=num;
+    const scenario=scenarios[num];
+    
+    document.querySelectorAll('.scenario-option').forEach((el,i)=>{
+        el.classList.toggle('selected',i===num-1);
+    });
+    
+    document.getElementById('scenarioSelection').style.display='none';
+    document.getElementById('rolePlayArea').style.display='block';
+    document.getElementById('scenarioTitle').textContent=scenario.title+' — You are: '+scenario.userRole;
+    
+    transcript=[];
+    currentExchange=0;
+    document.getElementById('chatContainer').innerHTML='';
+    updateExchangeCounter();
+    
+    setTimeout(()=>{
+        playAIMessage();
+    },500);
+}
+
+function updateExchangeCounter(){
+    const total=scenarios[selectedScenario].exchanges.length;
+    document.getElementById('exchangeCounter').textContent='Exchange '+(currentExchange+1)+' of '+total;
+}
+
+function addMessage(sender,text){
+    const container=document.getElementById('chatContainer');
+    const scenario=scenarios[selectedScenario];
+    const label=sender==='ai'?scenario.aiRole:scenario.userRole;
+    const bubbleClass=sender==='ai'?'chat-ai':'chat-user';
+    
+    const row=document.createElement('div');
+    row.className='chat-row '+sender;
+    row.innerHTML='<div><div class="chat-label">'+label+'</div><div class="chat-bubble '+bubbleClass+'">'+text+'</div></div>';
+    container.appendChild(row);
+    container.scrollTop=container.scrollHeight;
+}
+
+function speakText(text,callback){
+    if('speechSynthesis' in window){
+        window.speechSynthesis.cancel();
+        const utterance=new SpeechSynthesisUtterance(text);
+        utterance.rate=0.9;
+        utterance.lang='en-US';
+        utterance.onend=function(){
+            if(callback)callback();
+        };
+        window.speechSynthesis.speak(utterance);
+    }else{
+        if(callback)setTimeout(callback,1500);
+    }
+}
+
+function playAIMessage(){
+    const scenario=scenarios[selectedScenario];
+    const exchange=scenario.exchanges[currentExchange];
+    
+    document.getElementById('micBtn').disabled=true;
+    document.getElementById('statusText').textContent='Listen...';
+    
+    addMessage('ai',exchange.ai);
+    transcript.push(scenario.aiRole+': '+exchange.ai);
+    
+    speakText(exchange.ai,function(){
+        if(currentExchange>=scenario.exchanges.length-1){
+            endConversation();
+        }else{
+            document.getElementById('micBtn').disabled=false;
+            document.getElementById('statusText').textContent='Your turn! Click the microphone to respond';
+        }
+    });
+}
+
+function toggleMic(){
+    if(isRecording){
+        stopRecording();
+    }else{
+        startRecording();
+    }
+}
+
+function startRecording(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){
+        const response=prompt('Speech recognition not available. Type your response:');
+        if(response){
+            handleUserResponse(response);
+        }
+        return;
+    }
+    
+    recognition=new SR();
+    recognition.continuous=false;
+    recognition.interimResults=false;
+    recognition.lang='en-US';
+    
+    recognition.onstart=function(){
+        isRecording=true;
+        document.getElementById('micBtn').classList.add('recording');
+        document.getElementById('statusText').textContent='Listening... Click to stop';
+    };
+    
+    recognition.onresult=function(event){
+        const text=event.results[0][0].transcript;
+        handleUserResponse(text);
+    };
+    
+    recognition.onerror=function(event){
+        console.log('Speech error:',event.error);
+        stopRecording();
+        if(event.error==='no-speech'){
+            document.getElementById('statusText').textContent='No speech detected. Try again.';
+        }
+    };
+    
+    recognition.onend=function(){
+        if(isRecording){
+            stopRecording();
+        }
+    };
+    
+    try{
+        recognition.start();
+    }catch(e){
+        console.log('Recognition error:',e);
+    }
+}
+
+function stopRecording(){
+    isRecording=false;
+    document.getElementById('micBtn').classList.remove('recording');
+    if(recognition){
+        try{recognition.stop();}catch(e){}
+    }
+}
+
+function handleUserResponse(userText){
+    stopRecording();
+    
+    const scenario=scenarios[selectedScenario];
+    
+    addMessage('user',userText);
+    transcript.push(scenario.userRole+': '+userText);
+    
+    currentExchange++;
+    updateExchangeCounter();
+    
+    document.getElementById('micBtn').disabled=true;
+    document.getElementById('statusText').textContent='';
+    
+    setTimeout(()=>{
+        playAIMessage();
+    },1000);
+}
+
+function endConversation(){
+    document.getElementById('micBtn').disabled=true;
+    document.getElementById('statusText').textContent='✓ Conversation complete!';
+    
+    scores.s=Math.min(20,currentExchange*5);
+    
+    const scenario=scenarios[selectedScenario];
+    document.getElementById('sFeedback').innerHTML='<h4>Role Play Complete!</h4><p>Scenario: '+scenario.title+'</p><p>Exchanges completed: '+currentExchange+'</p><p><strong>Score: '+scores.s+'/20</strong></p>';
+    document.getElementById('sFeedback').classList.remove('hidden');
+    document.getElementById('sBtn').style.display='block';
+}
+
+function finishSpeaking(){
+    goTo('s5');
+}
+
+function submitFinal(){
+    let correct=0;
+    document.querySelectorAll('#grammarQuestions .question').forEach((q,i)=>{
+        const sel=q.querySelector('.option.selected');
+        const ans=parseInt(q.dataset.c);
+        if(sel){
+            if(parseInt(sel.dataset.v)===ans){
+                correct++;
+                sel.classList.add('correct');
+            }else{
+                sel.classList.add('incorrect');
+                q.querySelector('[data-v="'+ans+'"]').classList.add('correct');
+            }
+        }
+    });
+    scores.g=correct;
+    
+    const total=scores.l+scores.v+scores.w+scores.s+scores.g;
+    const pct=Math.round(total/57*100);
+    
+    document.getElementById('finalPct').textContent=pct+'%';
+    document.getElementById('studentDisplay').textContent=studentName+' ['+studentClass+']';
+    document.getElementById('scL').textContent=scores.l+'/3';
+    document.getElementById('scV').textContent=scores.v+'/6';
+    document.getElementById('scW').textContent=scores.w+'/20';
+    document.getElementById('scS').textContent=scores.s+'/20';
+    document.getElementById('scG').textContent=scores.g+'/8';
+    
+    let cefrLevel='B2';
+    let cefrMsg='';
+    if(pct>=85){
+        cefrLevel='B2+ → C1';
+        cefrMsg='Excellent! You are ready to move to C1 Advanced level!';
+    }else if(pct>=70){
+        cefrLevel='B2';
+        cefrMsg='Great job! You have solid B2 Upper Intermediate skills.';
+    }else if(pct>=50){
+        cefrLevel='B2-';
+        cefrMsg='Good progress! Keep practicing to strengthen your B2 skills.';
+    }else{
+        cefrLevel='B1+';
+        cefrMsg='You may need more practice at the B2 level before moving on.';
+    }
+    document.getElementById('cefrLevel').textContent=cefrLevel;
+    document.getElementById('cefrMessage').textContent=cefrMsg;
+    
+    goTo('results');
+}
+
+function submitToTeacher(){
+    const pct=Math.round((scores.l+scores.v+scores.w+scores.s+scores.g)/57*100);
+    const sn=studentName+' ['+studentClass+']';
+    const transcriptText=transcript.length>0?transcript.join('\n'):'[No role play completed]';
+    const cefrResult=document.getElementById('cefrLevel').textContent;
+    
+    const url='https://docs.google.com/forms/d/e/1FAIpQLSd9ACrRqGcnC8C0XEHLHNyTGGOlBwf7oMrwW7YixAjCWSlLfg/viewform?usp=pp_url'+
+        '&entry.518151516='+encodeURIComponent(sn)+
+        '&entry.864654596='+encodeURIComponent(SESSION)+
+        '&entry.258952242='+encodeURIComponent(scores.l+'/3')+
+        '&entry.859150584='+encodeURIComponent(scores.v+'/6')+
+        '&entry.939912807='+encodeURIComponent(writingText)+
+        '&entry.1121796741='+encodeURIComponent(scores.w+'/20')+
+        '&entry.2086302086='+encodeURIComponent(transcriptText)+
+        '&entry.1435469716='+encodeURIComponent(scores.s+'/20')+
+        '&entry.1998281944='+encodeURIComponent(scores.g+'/8')+
+        '&entry.1207114914='+encodeURIComponent(pct+'%')+
+        '&entry.73595410='+encodeURIComponent(cefrResult);
+    
+    document.getElementById('notSubmittedWarning').style.display='none';
+    document.getElementById('submittedSuccess').style.display='block';
+    document.getElementById('submitBtn').style.display='none';
+    window.open(url,'_blank');
+}
+</script>
+</body>
+</html>
