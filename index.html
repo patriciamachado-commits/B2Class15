@@ -214,7 +214,7 @@ textarea:focus{outline:none;border-color:#D84315}
                 <div style="background:#ffccbc;padding:10px 15px;border-radius:8px;margin-bottom:15px;text-align:center">
                     <strong id="scenarioTitle" style="color:#D84315"></strong>
                 </div>
-                <div class="exchange-counter" id="exchangeCounter">Exchange 1 of 4</div>
+                <div class="exchange-counter" id="exchangeCounter">Exchange 1 of 6</div>
                 <div class="chat-container" id="chatContainer"></div>
                 <div class="status-text" id="statusText">Click the microphone to respond</div>
                 <button class="mic-btn" id="micBtn" onclick="toggleMic()" disabled>
@@ -289,7 +289,7 @@ let transcript=[];
 let isRecording=false;
 let recognition=null;
 
-// Pre-scripted conversations for B2 level
+// Pre-scripted conversations for B2 level - Extended (6 exchanges)
 const scenarios={
     1:{
         title:'💪 Health and Fitness',
@@ -297,9 +297,11 @@ const scenarios={
         userRole:'You',
         exchanges:[
             {ai:"Hey! I noticed you've been looking really healthy lately. Have you made any lifestyle changes?"},
-            {ai:"That's impressive! How long have you been doing that? What kind of exercise do you do?"},
-            {ai:"That sounds great! Have you changed your eating habits too? Do you do meal prep?"},
-            {ai:"I should try that! If I started exercising, I would probably feel better. Thanks for the inspiration!"}
+            {ai:"That's impressive! How long have you been doing that? What motivated you to start?"},
+            {ai:"I see. What kind of exercise do you usually do? Do you go to a gym or work out at home?"},
+            {ai:"That sounds great! Have you changed your eating habits too? I've been thinking about meal prepping."},
+            {ai:"If you could give me one piece of advice about staying healthy, what would it be?"},
+            {ai:"Thank you so much for sharing! You've really inspired me. I think I'll start making some changes too!"}
         ]
     },
     2:{
@@ -308,9 +310,11 @@ const scenarios={
         userRole:'Employee',
         exchanges:[
             {ai:"I wanted to talk to you about what happened with the project deadline. Could you tell me what went wrong?"},
-            {ai:"I see. How did you handle the situation when you realized the mistake?"},
-            {ai:"What would you do differently if this situation happened again?"},
-            {ai:"Thank you for being honest about this. I appreciate you taking responsibility. Let's make sure it doesn't happen again."}
+            {ai:"I see. How did you realize there was a problem? When did you first notice the mistake?"},
+            {ai:"And how did you handle the situation once you realized what had happened?"},
+            {ai:"Did you communicate with the team or the client about the delay? What did you tell them?"},
+            {ai:"What would you do differently if this situation happened again in the future?"},
+            {ai:"Thank you for being honest about this. I appreciate you taking responsibility. Let's make sure we have better systems in place."}
         ]
     },
     3:{
@@ -319,9 +323,11 @@ const scenarios={
         userRole:'Candidate',
         exchanges:[
             {ai:"Thank you for coming today. Could you tell me a little about yourself and your professional background?"},
-            {ai:"Interesting! What would you say is your greatest strength, and how has it helped you in your career?"},
+            {ai:"Interesting! What made you interested in applying for this position at our company?"},
+            {ai:"What would you say is your greatest strength, and can you give me an example of how you've used it?"},
+            {ai:"How do you handle stressful situations or tight deadlines at work?"},
             {ai:"If you were offered this position, what would you bring to our team?"},
-            {ai:"Great answers! Do you have any questions for me about the position or the company?"}
+            {ai:"That sounds great. When would you be available to start if we offered you the position?"}
         ]
     }
 };
@@ -679,10 +685,11 @@ function endConversation(){
     document.getElementById('micBtn').disabled=true;
     document.getElementById('statusText').textContent='✓ Conversation complete!';
     
-    scores.s=Math.min(20,currentExchange*5);
+    // 4 points per exchange, max 20 (5 student responses)
+    scores.s=Math.min(20,currentExchange*4);
     
     const scenario=scenarios[selectedScenario];
-    document.getElementById('sFeedback').innerHTML='<h4>Role Play Complete!</h4><p>Scenario: '+scenario.title+'</p><p>Exchanges completed: '+currentExchange+'</p><p><strong>Score: '+scores.s+'/20</strong></p>';
+    document.getElementById('sFeedback').innerHTML='<h4>Role Play Complete!</h4><p>Scenario: '+scenario.title+'</p><p>Exchanges completed: '+currentExchange+'/5</p><p><strong>Score: '+scores.s+'/20</strong></p>';
     document.getElementById('sFeedback').classList.remove('hidden');
     document.getElementById('sBtn').style.display='block';
 }
